@@ -6,9 +6,9 @@
 
 ## Clone from Github ()
 
-> git clone https://github.com/kmhoran/markdown-buddy.git documentation-app
+> git clone https://github.com/kmhoran/markdown-buddy.git markdown-buddy
 
-> cd documentation-app
+> cd markdown-buddy
 
 > yarn install
 
