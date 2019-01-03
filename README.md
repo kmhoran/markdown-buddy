@@ -1,12 +1,12 @@
-# Documentation App
+# Markdown Documentation App
 
 ## Requirements
 - Node.js
 - Yarn
 
-## Install -- Github for now
+## Clone from Github ()
 
-> git clone [...] documentation-app
+> git clone \[...\] documentation-app
 
 > cd documentation-app
 

@@ -79,7 +79,7 @@ var generateMenu = function generateMenu() {
     submenu: [{
       label: "Open",
       click: function click() {
-        OpenFile(errorHandler);
+        OpenFile(mainWindow, errorHandler);
       }
     }, {
       role: "about"

@@ -16,7 +16,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var encoding = _config.default.defaultEncoding;
 
-function OpenFile(errHandler) {
+function OpenFile(window, errHandler) {
   _electron.dialog.showOpenDialog({
     filters: [{
       name: "Markdown",
@@ -29,27 +29,30 @@ function OpenFile(errHandler) {
   }, function (files) {
     _fs.default.readFile(files[0], encoding, function (err, contents) {
       if (err) errHandler(err);
-      console.log(contents);
+      window.webContents.send("main-load-document", createDocumentObject(contents));
     });
   });
 }
 
-function OpenDefaultDocument(window, errHandler) {
-  _fs.default.readFile(_config.default.defaultDocument, encoding, function (err, contents) {
-    if (err) errHandler(err);
-    console.log(contents); //pingTheRenderer(window, errHandler);
-  });
+function OpenDefaultDocument(callback) {
+  try {
+    console.log("opeining default doc");
+
+    _fs.default.readFile(_config.default.defaultDocument, encoding, function (err, contents) {
+      if (err) throw err;
+      console.log(contents);
+      callback(null, createDocumentObject(contents, "markdown"));
+    });
+  } catch (error) {
+    callback(error);
+  }
 }
 
-function pingTheRenderer(window, errHandler) {
-  try {
-    var message = {
-      title: "test",
-      text: "this is a message"
-    };
-    console.log("sending message from Main: ", message);
-    window.send("pong", message);
-  } catch (e) {
-    errHandler(e);
-  }
+function createDocumentObject(contents, type) {
+  var isDefault = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+  return {
+    text: contents,
+    type: type,
+    isDefault: isDefault
+  };
 }

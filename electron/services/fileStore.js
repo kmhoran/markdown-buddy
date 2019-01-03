@@ -1,10 +1,11 @@
 import { dialog } from "electron";
 import fs from "fs";
 import config from "../config.app";
+import { ipcMain } from "electron";
 
 const encoding = config.defaultEncoding;
 
-export function OpenFile(errHandler) {
+export function OpenFile(window, errHandler) {
   dialog.showOpenDialog(
     {
       filters: [
@@ -16,28 +17,30 @@ export function OpenFile(errHandler) {
     files => {
       fs.readFile(files[0], encoding, (err, contents) => {
         if (err) errHandler(err);
-        console.log(contents);
+        window.webContents.send("main-load-document", createDocumentObject(contents));
       });
     }
   );
 }
 
-export function OpenDefaultDocument(window, errHandler) {
-  fs.readFile(config.defaultDocument, encoding, (err, contents) => {
-    if (err) errHandler(err);
-    console.log(contents);
-    //pingTheRenderer(window, errHandler);
-  });
-}
+export function OpenDefaultDocument(callback) {
+  try {
+    console.log("opeining default doc");
+    fs.readFile(config.defaultDocument, encoding, (err, contents) => {
+      if (err) throw err;
 
-function pingTheRenderer(window, errHandler) {
-  try{
-    const message = { title: "test", text: "this is a message" };
-    console.log("sending message from Main: ", message);
-    window.send("pong", message);
-  } catch(e){
-    errHandler(e);
+      console.log(contents);
+      callback(null, createDocumentObject(contents, "markdown"));
+    });
+  } catch (error) {
+    callback(error);
   }
-  
 }
 
+function createDocumentObject(contents, type, isDefault = false) {
+  return {
+    text: contents,
+    type,
+    isDefault
+  };
+}

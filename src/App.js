@@ -3,39 +3,80 @@ import { connect } from "react-redux";
 import SplitPane from "react-split-pane";
 import ReactMarkdown from "react-markdown";
 import Editor from "./editor";
-import { SetElectronListeners, PingMainProcess } from "./electronEvents";
+import {
+  SetElectronListeners,
+  PingMainProcess,
+  LoadDefaultDocument
+} from "./electronEvents";
 
+import {
+  MAIN_HANDSHAKE_ACK,
+  MAIN_OPEN_NEW_DOCUMENT,
+  INTERNAL_ERROR
+} from "./constants/actionTypes";
 import focusedDocumentActions from "./actions/focusedDocumentActions";
+import mainEventActions from "./actions/mainEventActions";
 
 import "./App.css";
+import { throwError } from "rxjs";
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      markdownSrc: "# Hello World"
-    };
 
     this.onMarkdownChange = this.onMarkdownChange.bind(this);
   }
 
   componentDidMount() {
     console.log("app mounted");
-    SetElectronListeners();
+    const eventCallbacks = this.buildCallbackObject();
+    SetElectronListeners(eventCallbacks);
     this.connectToMain();
   }
 
-  connectToMain() {
-    console.log("connect");
-    while (!this.props.main || !this.props.main.connected) {
-      console.log("in while loop");
-      (() => {
-        console.log("trying to contact main...");
-        setTimeout(() => {
-          PingMainProcess();
-        }, 1000);
-      })();
+  handleAppError(err) {
+    console.log("App error!! ", err);
+  }
+
+  buildCallbackObject() {
+    if (!this.props) throw "no props to callback";
+    const cbo = {};
+    cbo[MAIN_HANDSHAKE_ACK] = () => {
+      this.props.completeHandshake();
+      this.loadStartupDocument();
+    };
+    cbo[INTERNAL_ERROR] = err => {
+      this.handleAppError(err);
+    };
+    cbo[MAIN_OPEN_NEW_DOCUMENT] = doc => {
+      console.log('[App] got doc: ', doc)
+      this.props.openNewDocument(doc);
+    };
+    return cbo;
+  }
+
+  loadStartupDocument() {
+    console.log("checking for startup document");
+    if (!this.props.focused.text) {
+      console.log("no focused document found");
+      LoadDefaultDocument();
     }
+  }
+
+  connectToMain() {
+    setTimeout(() => {
+      PingMainProcess(err => {});
+    }, 1000);
+    // console.log("connect");
+    // while (!this.props.main || !this.props.main.connected) {
+    //   console.log("in while loop");
+    //   (() => {
+    //     console.log("trying to contact main...");
+    //     setTimeout(() => {
+    //       PingMainProcess();
+    //     }, 1000);
+    //   })();
+    // }
   }
 
   onMarkdownChange(md) {
@@ -47,7 +88,7 @@ class App extends Component {
   };
 
   getFocusedText() {
-    if (this.props && this.UNSAFE_componentWillMount.props.focused) {
+    if (this.props && this.props.focused) {
       return this.props.focused.text;
     }
     return "loading...";
@@ -57,17 +98,17 @@ class App extends Component {
     const text = this.props.focused.text;
     return (
       <div className="App">
-        <pre>{JSON.stringify(this.props)}</pre>
+        <pre className="debug">{JSON.stringify(this.props)}</pre>
         <SplitPane split="vertical" defaultSize="50%">
           <div className="editor-pane">
             <Editor
               className="editor"
-              value={this.state.markdownSrc}
+              value={text}
               onChange={this.onMarkdownChange}
             />
           </div>
           <div className="view-pane">
-            <ReactMarkdown className="view" source={this.props.focused.text} />
+            <ReactMarkdown className="view" source={text} />
           </div>
         </SplitPane>
       </div>
@@ -80,7 +121,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  updateDocument: text => dispatch(focusedDocumentActions.update(text))
+  completeHandshake: () => dispatch(mainEventActions.markHandshakeComplete()),
+  updateDocument: text => dispatch(focusedDocumentActions.update(text)),
+  openNewDocument: doc => dispatch(mainEventActions.openNewDocument(doc))
 });
 
 export default connect(

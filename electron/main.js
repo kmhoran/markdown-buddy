@@ -84,7 +84,7 @@ const generateMenu = () => {
         {
           label: "Open",
           click: () => {
-            OpenFile(errorHandler);
+            OpenFile(mainWindow,errorHandler);
           }
         },
         { role: "about" },
