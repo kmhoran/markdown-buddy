@@ -9,23 +9,23 @@ var _electron = require("electron");
 
 var _fileStore = require("./fileStore");
 
+var _electronEventTypes = require("../constants/electronEventTypes");
+
 var _default = {
   set: function set() {
     console.log("setting event listeners."); // render-to-main handshake
 
-    _electron.ipcMain.on("ping", function (event, arg) {
+    _electron.ipcMain.on(_electronEventTypes.PING, function (event, arg) {
       var message = {
         success: true
       };
-      event.sender.send("pong", message);
+      event.sender.send(_electronEventTypes.PONG, message);
     }); // open default file
 
 
-    _electron.ipcMain.on("load-default-document", function (event, arg) {
-      console.log("in document load event handler");
+    _electron.ipcMain.on(_electronEventTypes.APP_LOAD_DEFAULT_DOC, function (event, arg) {
       (0, _fileStore.OpenDefaultDocument)(function (error, doc) {
-        console.log("[main_eventListeners] default doc: ", doc);
-        if (error) event.sender.send("document-read-error", error);else event.sender.send("main-load-document", doc);
+        if (error) event.sender.send(_electronEventTypes.APP_DOCUMENT_READ_ERROR, error);else event.sender.send(_electronEventTypes.APP_LOAD_DOC, doc);
       });
     });
   }

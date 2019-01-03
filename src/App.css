@@ -61,6 +61,7 @@
   background-color: blue;
   color: yellow;
   height: 100%;
+  max-width: 100%;
 }
 
 .view-pane {

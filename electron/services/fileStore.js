@@ -1,7 +1,7 @@
 import { dialog } from "electron";
 import fs from "fs";
 import config from "../config.app";
-import { ipcMain } from "electron";
+import {APP_LOAD_DOC} from "../constants/electronEventTypes";
 
 const encoding = config.defaultEncoding;
 
@@ -17,7 +17,10 @@ export function OpenFile(window, errHandler) {
     files => {
       fs.readFile(files[0], encoding, (err, contents) => {
         if (err) errHandler(err);
-        window.webContents.send("main-load-document", createDocumentObject(contents));
+        window.webContents.send(
+          APP_LOAD_DOC,
+          createDocumentObject(contents)
+        );
       });
     }
   );
@@ -25,7 +28,6 @@ export function OpenFile(window, errHandler) {
 
 export function OpenDefaultDocument(callback) {
   try {
-    console.log("opeining default doc");
     fs.readFile(config.defaultDocument, encoding, (err, contents) => {
       if (err) throw err;
 
