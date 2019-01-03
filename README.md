@@ -6,7 +6,7 @@
 
 ## Clone from Github ()
 
-> git clone \[...\] documentation-app
+> git clone https://github.com/kmhoran/markdown-buddy.git documentation-app
 
 > cd documentation-app
 
