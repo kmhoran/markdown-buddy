@@ -1,34 +1,38 @@
 "use strict";
 
-var _require = require("electron"),
-    app = _require.app,
-    BrowserWindow = _require.BrowserWindow,
-    shell = _require.shell,
-    ipcMain = _require.ipcMain,
-    Menu = _require.Menu,
-    TouchBar = _require.TouchBar;
+const {
+  app,
+  BrowserWindow,
+  shell,
+  ipcMain,
+  Menu,
+  TouchBar
+} = require("electron");
 
-var TouchBarButton = TouchBar.TouchBarButton,
-    TouchBarLabel = TouchBar.TouchBarLabel,
-    TouchBarSpacer = TouchBar.TouchBarSpacer;
+const {
+  TouchBarButton,
+  TouchBarLabel,
+  TouchBarSpacer
+} = TouchBar;
 
-var _require2 = require("./services/fileStore"),
-    OpenFile = _require2.OpenFile,
-    OpenDefaultDocument = _require2.OpenDefaultDocument;
+const {
+  OpenFile,
+  OpenDefaultDocument
+} = require("./services/fileStore");
 
-var eventListeners = require("./services/eventListeners");
+const eventListeners = require("./services/eventListeners");
 
-var path = require("path");
+const path = require("path");
 
-var isDev = require("electron-is-dev");
+const isDev = require("electron-is-dev");
 
-var errorHandler = function errorHandler(error) {
+const errorHandler = error => {
   console.log("!!! ERROR: ", error);
 };
 
-var mainWindow;
+let mainWindow;
 
-var createWindow = function createWindow() {
+const createWindow = () => {
   mainWindow = new BrowserWindow({
     backgroundColor: "#F7F7F7",
     minWidth: 880,
@@ -41,44 +45,45 @@ var createWindow = function createWindow() {
     height: 860,
     width: 1280
   });
-  mainWindow.loadURL(isDev ? "http://localhost:3000" : "file://".concat(path.join(__dirname, "../build/index.html")));
+  mainWindow.loadURL(isDev ? "http://localhost:3000" : `file://${path.join(__dirname, "../build/index.html")}`);
 
   if (isDev) {
-    var _require3 = require("electron-devtools-installer"),
-        installExtension = _require3.default,
-        REACT_DEVELOPER_TOOLS = _require3.REACT_DEVELOPER_TOOLS,
-        REDUX_DEVTOOLS = _require3.REDUX_DEVTOOLS;
+    const {
+      default: installExtension,
+      REACT_DEVELOPER_TOOLS,
+      REDUX_DEVTOOLS
+    } = require("electron-devtools-installer");
 
-    installExtension(REACT_DEVELOPER_TOOLS).then(function (name) {
-      console.log("Added Extension: ".concat(name));
-    }).catch(function (err) {
+    installExtension(REACT_DEVELOPER_TOOLS).then(name => {
+      console.log(`Added Extension: ${name}`);
+    }).catch(err => {
       console.log("An error occurred: ", err);
     });
-    installExtension(REDUX_DEVTOOLS).then(function (name) {
-      console.log("Added Extension: ".concat(name));
-    }).catch(function (err) {
+    installExtension(REDUX_DEVTOOLS).then(name => {
+      console.log(`Added Extension: ${name}`);
+    }).catch(err => {
       console.log("An error occurred: ", err);
     }); // start with devtools open
 
     mainWindow.webContents.openDevTools();
   }
 
-  mainWindow.once("ready-to-show", function () {
+  mainWindow.once("ready-to-show", () => {
     //OpenDefaultDocument(mainWindow, errorHandler);
     eventListeners.default.set();
     mainWindow.show();
-    ipcMain.on("open-external-window", function (event, arg) {
+    ipcMain.on("open-external-window", (event, arg) => {
       shell.openExternal(arg);
     });
   });
 };
 
-var generateMenu = function generateMenu() {
-  var template = [{
+const generateMenu = () => {
+  const template = [{
     label: "File",
     submenu: [{
       label: "Open",
-      click: function click() {
+      click: () => {
         OpenFile(mainWindow, errorHandler);
       }
     }, {
@@ -138,32 +143,34 @@ var generateMenu = function generateMenu() {
   }, {
     role: "help",
     submenu: [{
-      click: function click() {
+      click() {
         require("electron").shell.openExternal("https://getstream.io/winds");
       },
+
       label: "Learn More"
     }, {
-      click: function click() {
+      click() {
         require("electron").shell.openExternal("https://github.com/GetStream/Winds/issues");
       },
+
       label: "File Issue on GitHub"
     }]
   }];
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 };
 
-app.on("ready", function () {
+app.on("ready", () => {
   createWindow();
   generateMenu();
 });
-app.on("window-all-closed", function () {
+app.on("window-all-closed", () => {
   app.quit();
 });
-app.on("activate", function () {
+app.on("activate", () => {
   if (mainWindow === null) {
     createWindow();
   }
 });
-ipcMain.on("load-page", function (event, arg) {
+ipcMain.on("load-page", (event, arg) => {
   mainWindow.loadURL(arg);
 });
