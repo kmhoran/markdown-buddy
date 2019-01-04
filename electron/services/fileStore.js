@@ -3,8 +3,6 @@ import fs from "fs";
 import path from "path";
 import config from "../config.app";
 import { APP_LOAD_DOC } from "../constants/electronEventTypes";
-// import { resolve } from "uri-js";
-// import { reject } from "bluebird-lst";
 
 const encoding = config.defaultEncoding;
 
@@ -47,14 +45,6 @@ export function OpenDefaultDocument(callback) {
   }
 }
 
-function old_createDocumentObject(contents, type, isDefault = false) {
-  return {
-    text: contents,
-    type,
-    isDefault
-  };
-}
-
 async function renderExistingDocument(docPath) {
   console.log("[main_filestore] rendering default");
   const contents = await readFileAsync(docPath);
@@ -91,13 +81,5 @@ async function readFileAsync(docPath) {
   });
 }
 
-async function fileStatAsync(docPath) {
-  return new Promise((resolve, reject) => {
-    fs.stat(docPath, (err, stats) => {
-      if (err) reject(err);
-      resolve(stats);
-    });
-  });
-}
 
 
