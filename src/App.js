@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import SplitPane from "react-split-pane";
 import ReactMarkdown from "react-markdown";
 import Editor from "./editor";
+import DocumentBar from "./components/documentBar";
 import {
   SetElectronListeners,
   PingMainProcess,
@@ -25,6 +26,7 @@ class App extends Component {
     super(props);
 
     this.onMarkdownChange = this.onMarkdownChange.bind(this);
+    this.onDocumentTitleChange = this.onDocumentTitleChange.bind(this);
   }
 
   componentDidMount() {
@@ -49,7 +51,7 @@ class App extends Component {
       this.handleAppError(err);
     };
     cbo[MAIN_OPEN_NEW_DOCUMENT] = doc => {
-      console.log('[App] got doc: ', doc)
+      console.log("[App] got doc: ", doc);
       this.props.openNewDocument(doc);
     };
     return cbo;
@@ -79,8 +81,19 @@ class App extends Component {
     // }
   }
 
-  onMarkdownChange(md) {
-    this.props.updateDocument(md);
+  onMarkdownChange(text) {
+
+    this.props.updateDocument({
+      ...this.props.focused,
+      text
+    });
+  }
+
+  onDocumentTitleChange(title){
+    this.props.updateDocument({
+      ...this.props.focused,
+      name: title
+    })
   }
 
   simpleAction = e => {
@@ -95,10 +108,13 @@ class App extends Component {
   }
 
   render() {
-    const text = this.props.focused.text;
+    const doc = this.props.focused;
+    const { text, name } = doc;
     return (
       <div className="App">
-        <pre className="debug">{JSON.stringify(this.props)}</pre>
+        {/* <pre className="debug">{JSON.stringify(this.props)}</pre> */}
+        <DocumentBar document={doc}
+                     onTitleChange={this.onDocumentTitleChange} />
         <SplitPane split="vertical" defaultSize="50%">
           <div className="editor-pane">
             <Editor
@@ -122,7 +138,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   completeHandshake: () => dispatch(mainEventActions.markHandshakeComplete()),
-  updateDocument: text => dispatch(focusedDocumentActions.update(text)),
+  updateDocument: doc => dispatch(focusedDocumentActions.update(doc)),
   openNewDocument: doc => dispatch(mainEventActions.openNewDocument(doc))
 });
 

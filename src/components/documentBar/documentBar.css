@@ -1,0 +1,10 @@
+.document-bar {
+  padding: 0.7em 0.5em 0 0.5em;
+  background-color: #eaeaea;
+  height: 5.5em;
+}
+.document-path-modest{
+  color: #333;
+  font-size: 0.7em;
+  font-family: 'Courier New', Courier, monospace;
+}

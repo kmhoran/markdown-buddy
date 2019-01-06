@@ -18,8 +18,6 @@ var _electronEventTypes = require("../constants/electronEventTypes");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// import { resolve } from "uri-js";
-// import { reject } from "bluebird-lst";
 const encoding = _config.default.defaultEncoding;
 
 function OpenFile(window, errHandler) {
@@ -59,14 +57,6 @@ function OpenDefaultDocument(callback) {
   }
 }
 
-function old_createDocumentObject(contents, type, isDefault = false) {
-  return {
-    text: contents,
-    type,
-    isDefault
-  };
-}
-
 async function renderExistingDocument(docPath) {
   console.log("[main_filestore] rendering default");
   const contents = await readFileAsync(docPath);
@@ -74,22 +64,28 @@ async function renderExistingDocument(docPath) {
 
   const ext = _path.default.extname(docPath);
 
+  const parentDirectoryPath = _path.default.dirname(docPath);
+
+  const splitPath = parentDirectoryPath.split("/");
+  const parentDirectory = splitPath[splitPath.length - 1];
   return {
     text: contents,
     isDefault: docPath === _config.default.defaultDocument,
     uid: renderUid(),
-    directory: _path.default.dirname(docPath),
+    parentDirectoryPath,
+    parentDirectory,
     name: _path.default.basename(docPath, ext),
+    // return file name w/o ext
     ext: ext.substring(1),
     // remove leading '.'
-    unsavedCanges: false
+    unsavedChanges: false
   };
 }
 
 function renderUid() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
     var r = Math.random() * 16 | 0,
-        v = c == 'x' ? r : r & 0x3 | 0x8;
+        v = c == "x" ? r : r & 0x3 | 0x8;
     return v.toString(16);
   });
 } // convert fs callbacks to promises
@@ -102,15 +98,6 @@ async function readFileAsync(docPath) {
       console.log("[main_filestore] file read! has err: ", err != null);
       if (err) reject(err);
       resolve(contents);
-    });
-  });
-}
-
-async function fileStatAsync(docPath) {
-  return new Promise((resolve, reject) => {
-    _fs.default.stat(docPath, (err, stats) => {
-      if (err) reject(err);
-      resolve(stats);
     });
   });
 }

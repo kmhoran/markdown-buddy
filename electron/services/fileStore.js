@@ -51,11 +51,15 @@ async function renderExistingDocument(docPath) {
   console.log("[main_filestore] contents: ", contents);
 
   const ext = path.extname(docPath);
+  const parentDirectoryPath = path.dirname(docPath);
+  const splitPath = parentDirectoryPath.split("/");
+  const parentDirectory = splitPath[splitPath.length - 1];
   return {
     text: contents,
     isDefault: docPath === config.defaultDocument,
     uid: renderUid(),
-    directory: path.dirname(docPath),
+    parentDirectoryPath,
+    parentDirectory,
     name: path.basename(docPath, ext), // return file name w/o ext
     ext: ext.substring(1), // remove leading '.'
     unsavedChanges: false
@@ -63,8 +67,9 @@ async function renderExistingDocument(docPath) {
 }
 
 function renderUid() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+    var r = (Math.random() * 16) | 0,
+      v = c == "x" ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
 }
@@ -80,6 +85,3 @@ async function readFileAsync(docPath) {
     });
   });
 }
-
-
-
