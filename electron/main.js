@@ -7,8 +7,9 @@ const {
   TouchBar
 } = require("electron");
 const { TouchBarButton, TouchBarLabel, TouchBarSpacer } = TouchBar;
-const { OpenFile,  OpenDefaultDocument } = require("./services/fileStore");
+const { OpenFile, OpenDefaultDocument } = require("./services/fileStore");
 const eventListeners = require("./services/eventListeners");
+const EventTriggers = require("./services/eventTriggers").EventTriggers;
 
 const path = require("path");
 const isDev = require("electron-is-dev");
@@ -18,6 +19,7 @@ const errorHandler = error => {
 };
 
 let mainWindow;
+let triggers;
 
 const createWindow = () => {
   mainWindow = new BrowserWindow({
@@ -74,6 +76,8 @@ const createWindow = () => {
       shell.openExternal(arg);
     });
   });
+
+  triggers = new EventTriggers(mainWindow, errorHandler);
 };
 
 const generateMenu = () => {
@@ -82,11 +86,41 @@ const generateMenu = () => {
       label: "File",
       submenu: [
         {
-          label: "Open",
+          label: "New File",
           click: () => {
-            OpenFile(mainWindow,errorHandler);
+            console.log("open new file");
           }
         },
+        { type: "separator" },
+        {
+          label: "Open",
+          click: () => {
+            OpenFile((err, doc) => {
+              if(err) errorHandler(err);
+              else triggers.OpenNewDocument(doc);
+            });
+          }
+        },
+        { type: "separator" },
+        {
+          label: "Save",
+          click: () => {
+            console.log("save file");
+          }
+        },
+        {
+          label: "Save As",
+          click: () => {
+            console.log("save file As");
+          }
+        },
+        {
+          label: "Save All",
+          click: () => {
+            console.log("save all files");
+          }
+        },
+        { type: "separator" },
         { role: "about" },
         { role: "quit" }
       ]

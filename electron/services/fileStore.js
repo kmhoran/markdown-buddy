@@ -6,7 +6,7 @@ import { APP_LOAD_DOC } from "../constants/electronEventTypes";
 
 const encoding = config.defaultEncoding;
 
-export function OpenFile(window, errHandler) {
+export function OpenFile(callback) {
   try {
     dialog.showOpenDialog(
       {
@@ -17,13 +17,14 @@ export function OpenFile(window, errHandler) {
         properties: ["openFile"]
       },
       async files => {
+        if (!files) return;
         const doc = await renderExistingDocument(files[0]);
         console.log("[main_filestore] opened doc: ", doc);
-        window.webContents.send(APP_LOAD_DOC, doc);
+        callback(null, doc);
       }
     );
   } catch (err) {
-    errHandler(err);
+    callback(err);
   }
 }
 

@@ -20,7 +20,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 const encoding = _config.default.defaultEncoding;
 
-function OpenFile(window, errHandler) {
+function OpenFile(callback) {
   try {
     _electron.dialog.showOpenDialog({
       filters: [{
@@ -32,12 +32,13 @@ function OpenFile(window, errHandler) {
       }],
       properties: ["openFile"]
     }, async files => {
+      if (!files) return;
       const doc = await renderExistingDocument(files[0]);
       console.log("[main_filestore] opened doc: ", doc);
-      window.webContents.send(_electronEventTypes.APP_LOAD_DOC, doc);
+      callback(null, doc);
     });
   } catch (err) {
-    errHandler(err);
+    callback(err);
   }
 }
 

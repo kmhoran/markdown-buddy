@@ -22,6 +22,8 @@ const {
 
 const eventListeners = require("./services/eventListeners");
 
+const EventTriggers = require("./services/eventTriggers").EventTriggers;
+
 const path = require("path");
 
 const isDev = require("electron-is-dev");
@@ -31,6 +33,7 @@ const errorHandler = error => {
 };
 
 let mainWindow;
+let triggers;
 
 const createWindow = () => {
   mainWindow = new BrowserWindow({
@@ -76,16 +79,45 @@ const createWindow = () => {
       shell.openExternal(arg);
     });
   });
+  triggers = new EventTriggers(mainWindow, errorHandler);
 };
 
 const generateMenu = () => {
   const template = [{
     label: "File",
     submenu: [{
+      label: "New File",
+      click: () => {
+        console.log("open new file");
+      }
+    }, {
+      type: "separator"
+    }, {
       label: "Open",
       click: () => {
-        OpenFile(mainWindow, errorHandler);
+        OpenFile((err, doc) => {
+          if (err) errorHandler(err);else triggers.OpenNewDocument(doc);
+        });
       }
+    }, {
+      type: "separator"
+    }, {
+      label: "Save",
+      click: () => {
+        console.log("save file");
+      }
+    }, {
+      label: "Save As",
+      click: () => {
+        console.log("save file As");
+      }
+    }, {
+      label: "Save All",
+      click: () => {
+        console.log("save all files");
+      }
+    }, {
+      type: "separator"
     }, {
       role: "about"
     }, {
