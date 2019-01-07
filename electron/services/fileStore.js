@@ -75,6 +75,25 @@ function renderUid() {
   });
 }
 
+export function SaveDocument(doc, callback) {
+  if (!doc) return;
+  else if (doc.isDefault) callback(null, doc);
+  else{
+    const docPath = `${doc.parentDirectoryPath}/${doc.name}.${doc.ext}`;
+    console.log("[main_filestore] saving file ", path);
+    writeFileAsync(docPath, doc)
+      .then(() => {
+        renderExistingDocument(docPath).then(newDoc => {
+          console.log("[main_filestore] returning saved file");
+          callback(null, newDoc);
+        });
+      })
+      .catch(err => {
+        callback(err);
+      });
+  }
+}
+
 // convert fs callbacks to promises
 async function readFileAsync(docPath) {
   console.log("[main_filestore] creating read promise");
@@ -83,6 +102,16 @@ async function readFileAsync(docPath) {
       console.log("[main_filestore] file read! has err: ", err != null);
       if (err) reject(err);
       resolve(contents);
+    });
+  });
+}
+
+async function writeFileAsync(docPath, doc) {
+  console.log("[main_filestore] creating write promise");
+  return new Promise((resolve, reject) => {
+    fs.writeFile(docPath, doc.text, err => {
+      if (err) reject(err);
+      resolve();
     });
   });
 }

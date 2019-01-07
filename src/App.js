@@ -15,6 +15,7 @@ import {
   MAIN_OPEN_NEW_DOCUMENT,
   INTERNAL_ERROR
 } from "./constants/actionTypes";
+import { APP_RETURN_FOCUSED_DOCUMENT } from "./constants/electronEventTypes";
 import focusedDocumentActions from "./actions/focusedDocumentActions";
 import mainEventActions from "./actions/mainEventActions";
 
@@ -54,6 +55,9 @@ class App extends Component {
       console.log("[App] got doc: ", doc);
       this.props.openNewDocument(doc);
     };
+    cbo[APP_RETURN_FOCUSED_DOCUMENT] = () =>{
+      return this.props.focused;
+    };
     return cbo;
   }
 
@@ -82,18 +86,17 @@ class App extends Component {
   }
 
   onMarkdownChange(text) {
-
     this.props.updateDocument({
       ...this.props.focused,
       text
     });
   }
 
-  onDocumentTitleChange(title){
+  onDocumentTitleChange(title) {
     this.props.updateDocument({
       ...this.props.focused,
       name: title
-    })
+    });
   }
 
   simpleAction = e => {
@@ -113,8 +116,10 @@ class App extends Component {
     return (
       <div className="App">
         {/* <pre className="debug">{JSON.stringify(this.props)}</pre> */}
-        <DocumentBar document={doc}
-                     onTitleChange={this.onDocumentTitleChange} />
+        <DocumentBar
+          document={doc}
+          onTitleChange={this.onDocumentTitleChange}
+        />
         <SplitPane split="vertical" defaultSize="50%">
           <div className="editor-pane">
             <Editor

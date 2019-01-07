@@ -1,9 +1,10 @@
 import { ipcMain } from "electron";
-import { OpenDefaultDocument } from "./fileStore";
+import { OpenDefaultDocument, SaveDocument } from "./fileStore";
 import {
   APP_LOAD_DOC,
   APP_DOCUMENT_READ_ERROR,
   APP_LOAD_DEFAULT_DOC,
+  APP_RETURN_FOCUSED_DOCUMENT,
   PING,
   PONG
 } from "../constants/electronEventTypes";
@@ -23,6 +24,14 @@ export default {
         if (error) event.sender.send(APP_DOCUMENT_READ_ERROR, error);
         else event.sender.send(APP_LOAD_DOC, doc);
       });
+    });
+
+    //
+    ipcMain.on(APP_RETURN_FOCUSED_DOCUMENT, (event, doc) => {
+      SaveDocument(doc, (err, doc) => {
+        if(err) console.log("[event-listeners] error ",err);
+        console.log("gor saved doc: ", doc);
+      })
     });
   }
 };

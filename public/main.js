@@ -104,7 +104,7 @@ const generateMenu = () => {
     }, {
       label: "Save",
       click: () => {
-        console.log("save file");
+        triggers.RequestFocusedDocument();
       }
     }, {
       label: "Save As",

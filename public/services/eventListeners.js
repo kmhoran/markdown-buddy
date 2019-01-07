@@ -27,6 +27,14 @@ var _default = {
       (0, _fileStore.OpenDefaultDocument)((error, doc) => {
         if (error) event.sender.send(_electronEventTypes.APP_DOCUMENT_READ_ERROR, error);else event.sender.send(_electronEventTypes.APP_LOAD_DOC, doc);
       });
+    }); //
+
+
+    _electron.ipcMain.on(_electronEventTypes.APP_RETURN_FOCUSED_DOCUMENT, (event, doc) => {
+      (0, _fileStore.SaveDocument)(doc, (err, doc) => {
+        if (err) console.log("[event-listeners] error ", err);
+        console.log("gor saved doc: ", doc);
+      });
     });
   }
 };

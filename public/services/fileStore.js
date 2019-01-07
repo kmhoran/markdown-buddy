@@ -5,6 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.OpenFile = OpenFile;
 exports.OpenDefaultDocument = OpenDefaultDocument;
+exports.SaveDocument = SaveDocument;
 
 var _electron = require("electron");
 
@@ -89,6 +90,21 @@ function renderUid() {
         v = c == "x" ? r : r & 0x3 | 0x8;
     return v.toString(16);
   });
+}
+
+function SaveDocument(doc, callback) {
+  if (!doc) return;else if (doc.isDefault) callback(null, doc);else {
+    const docPath = `${doc.parentDirectoryPath}/${doc.name}.${doc.ext}`;
+    console.log("[main_filestore] saving file ", _path.default);
+    writeFileAsync(docPath, doc).then(() => {
+      renderExistingDocument(docPath).then(newDoc => {
+        console.log("[main_filestore] returning saved file ", _path.default);
+        callback(null, newDoc);
+      });
+    }).catch(err => {
+      callback(err);
+    });
+  }
 } // convert fs callbacks to promises
 
 
@@ -99,6 +115,16 @@ async function readFileAsync(docPath) {
       console.log("[main_filestore] file read! has err: ", err != null);
       if (err) reject(err);
       resolve(contents);
+    });
+  });
+}
+
+async function writeFileAsync(docPath, doc) {
+  console.log("[main_filestore] creating write promise");
+  return new Promise((resolve, reject) => {
+    _fs.default.writeFile(docPath, doc.text, err => {
+      if (err) reject(err);
+      resolve();
     });
   });
 }

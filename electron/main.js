@@ -96,7 +96,7 @@ const generateMenu = () => {
           label: "Open",
           click: () => {
             OpenFile((err, doc) => {
-              if(err) errorHandler(err);
+              if (err) errorHandler(err);
               else triggers.OpenNewDocument(doc);
             });
           }
@@ -105,7 +105,7 @@ const generateMenu = () => {
         {
           label: "Save",
           click: () => {
-            console.log("save file");
+            triggers.RequestFocusedDocument();
           }
         },
         {
