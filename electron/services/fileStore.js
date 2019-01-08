@@ -2,7 +2,6 @@ import { dialog } from "electron";
 import fs from "fs";
 import path from "path";
 import config from "../config.app";
-import { APP_LOAD_DOC } from "../constants/electronEventTypes";
 
 const encoding = config.defaultEncoding;
 
@@ -46,11 +45,8 @@ export function OpenDefaultDocument(callback) {
   }
 }
 
-async function renderExistingDocument(docPath) {
-  console.log("[main_filestore] rendering default");
+async function renderExistingDocument(docPath, uid = null) {
   const contents = await readFileAsync(docPath);
-  console.log("[main_filestore] contents: ", contents);
-
   const ext = path.extname(docPath);
   const parentDirectoryPath = path.dirname(docPath);
   const splitPath = parentDirectoryPath.split("/");
@@ -58,7 +54,7 @@ async function renderExistingDocument(docPath) {
   return {
     text: contents,
     isDefault: docPath === config.defaultDocument,
-    uid: renderUid(),
+    uid: uid || renderUid(),
     parentDirectoryPath,
     parentDirectory,
     name: path.basename(docPath, ext), // return file name w/o ext
@@ -83,7 +79,7 @@ export function SaveDocument(doc, callback) {
     console.log("[main_filestore] saving file ", path);
     writeFileAsync(docPath, doc)
       .then(() => {
-        renderExistingDocument(docPath).then(newDoc => {
+        renderExistingDocument(docPath, doc.uid).then(newDoc => {
           console.log("[main_filestore] returning saved file");
           callback(null, newDoc);
         });

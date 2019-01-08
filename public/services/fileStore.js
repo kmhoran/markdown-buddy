@@ -15,8 +15,6 @@ var _path = _interopRequireDefault(require("path"));
 
 var _config = _interopRequireDefault(require("../config.app"));
 
-var _electronEventTypes = require("../constants/electronEventTypes");
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const encoding = _config.default.defaultEncoding;
@@ -59,10 +57,8 @@ function OpenDefaultDocument(callback) {
   }
 }
 
-async function renderExistingDocument(docPath) {
-  console.log("[main_filestore] rendering default");
+async function renderExistingDocument(docPath, uid = null) {
   const contents = await readFileAsync(docPath);
-  console.log("[main_filestore] contents: ", contents);
 
   const ext = _path.default.extname(docPath);
 
@@ -73,7 +69,7 @@ async function renderExistingDocument(docPath) {
   return {
     text: contents,
     isDefault: docPath === _config.default.defaultDocument,
-    uid: renderUid(),
+    uid: uid || renderUid(),
     parentDirectoryPath,
     parentDirectory,
     name: _path.default.basename(docPath, ext),
@@ -97,8 +93,8 @@ function SaveDocument(doc, callback) {
     const docPath = `${doc.parentDirectoryPath}/${doc.name}.${doc.ext}`;
     console.log("[main_filestore] saving file ", _path.default);
     writeFileAsync(docPath, doc).then(() => {
-      renderExistingDocument(docPath).then(newDoc => {
-        console.log("[main_filestore] returning saved file ", _path.default);
+      renderExistingDocument(docPath, doc.uid).then(newDoc => {
+        console.log("[main_filestore] returning saved file");
         callback(null, newDoc);
       });
     }).catch(err => {

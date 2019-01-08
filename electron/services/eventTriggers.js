@@ -1,6 +1,6 @@
 import {
-  APP_LOAD_DOC,
-  APP_REQUEST_FOCUSED_DOCUMENT
+  APP_MAIN_LOAD_DOC,
+  APP_MAIN_REQUEST_FOCUSED_DOCUMENT
 } from "../constants/electronEventTypes";
 
 class EventTriggers {
@@ -11,11 +11,11 @@ class EventTriggers {
   }
   OpenNewDocument(doc) {
     console.log("[event triggers] opening doc: ", doc);
-    this.TriggerEvent(APP_LOAD_DOC, doc);
+    this.TriggerEvent(APP_MAIN_LOAD_DOC, doc);
   }
 
   RequestFocusedDocument() {
-    this.TriggerEvent(APP_REQUEST_FOCUSED_DOCUMENT);
+    this.TriggerEvent(APP_MAIN_REQUEST_FOCUSED_DOCUMENT);
   }
 
   TriggerEvent(eventType, data = null) {

@@ -6,11 +6,13 @@ import {
   INTERNAL_ERROR
 } from "./constants/actionTypes";
 import {
-  APP_LOAD_DOC,
-  APP_DOCUMENT_READ_ERROR,
-  APP_LOAD_DEFAULT_DOC,
-  APP_REQUEST_FOCUSED_DOCUMENT,
-  APP_RETURN_FOCUSED_DOCUMENT,
+  APP_MAIN_LOAD_DOC,
+  APP_MAIN_DOCUMENT_READ_ERROR,
+  APP_RENDER_LOAD_DEFAULT_DOC,
+  APP_MAIN_REQUEST_FOCUSED_DOCUMENT,
+  APP_RENDER_RETURN_FOCUSED_DOCUMENT,
+  APP_MAIN_FINISH_SAVING_DOCUMENT,
+  APP_MAIN_DOCUMENT_SAVE_ERROR,
   PING,
   PONG
 } from "./constants/electronEventTypes";
@@ -21,19 +23,23 @@ export function SetElectronListeners(callbacks) {
     if (callbacks[MAIN_HANDSHAKE_ACK]) callbacks[MAIN_HANDSHAKE_ACK]();
 
     // display opened document
-    window.ipcRenderer.on(APP_LOAD_DOC, (event, doc) => {
+    window.ipcRenderer.on(APP_MAIN_LOAD_DOC, (event, doc) => {
       if (callbacks[MAIN_OPEN_NEW_DOCUMENT])
         callbacks[MAIN_OPEN_NEW_DOCUMENT](doc);
     });
 
     // return focused document
-    window.ipcRenderer.on(APP_REQUEST_FOCUSED_DOCUMENT, (event) => {
-      console.log("[e-events] returning focused")
-      if(!callbacks[APP_RETURN_FOCUSED_DOCUMENT]) return;
-      const doc = callbacks[APP_RETURN_FOCUSED_DOCUMENT]();
-      console.log("[e-events]: doc: ", doc);
-      window.ipcRenderer.send(APP_RETURN_FOCUSED_DOCUMENT, doc);
-    })
+    window.ipcRenderer.on(APP_MAIN_REQUEST_FOCUSED_DOCUMENT, event => {
+      if (!callbacks[APP_RENDER_RETURN_FOCUSED_DOCUMENT]) return;
+      const doc = callbacks[APP_RENDER_RETURN_FOCUSED_DOCUMENT]();
+      window.ipcRenderer.send(APP_RENDER_RETURN_FOCUSED_DOCUMENT, doc);
+    });
+
+    // finish saving document
+    window.ipcRenderer.on(APP_MAIN_FINISH_SAVING_DOCUMENT, (event, doc) => {
+      if (callbacks[MAIN_OPEN_NEW_DOCUMENT])
+        callbacks[MAIN_OPEN_NEW_DOCUMENT](doc);
+    });
   });
 }
 
@@ -42,5 +48,5 @@ export function PingMainProcess() {
 }
 
 export function LoadDefaultDocument() {
-  window.ipcRenderer.send(APP_LOAD_DEFAULT_DOC);
+  window.ipcRenderer.send(APP_RENDER_LOAD_DEFAULT_DOC);
 }

@@ -23,17 +23,16 @@ var _default = {
     }); // open default file
 
 
-    _electron.ipcMain.on(_electronEventTypes.APP_LOAD_DEFAULT_DOC, (event, arg) => {
+    _electron.ipcMain.on(_electronEventTypes.APP_RENDER_LOAD_DEFAULT_DOC, (event, arg) => {
       (0, _fileStore.OpenDefaultDocument)((error, doc) => {
-        if (error) event.sender.send(_electronEventTypes.APP_DOCUMENT_READ_ERROR, error);else event.sender.send(_electronEventTypes.APP_LOAD_DOC, doc);
+        if (error) event.sender.send(_electronEventTypes.APP_MAIN_DOCUMENT_READ_ERROR, error);else event.sender.send(_electronEventTypes.APP_MAIN_LOAD_DOC, doc);
       });
-    }); //
+    }); // save the focused document
 
 
-    _electron.ipcMain.on(_electronEventTypes.APP_RETURN_FOCUSED_DOCUMENT, (event, doc) => {
+    _electron.ipcMain.on(_electronEventTypes.APP_RENDER_RETURN_FOCUSED_DOCUMENT, (event, doc) => {
       (0, _fileStore.SaveDocument)(doc, (err, doc) => {
-        if (err) console.log("[event-listeners] error ", err);
-        console.log("gor saved doc: ", doc);
+        if (err) event.sender.send(_electronEventTypes.APP_MAIN_DOCUMENT_SAVE_ERROR, err);else event.sender.send(_electronEventTypes.APP_MAIN_FINISH_SAVING_DOCUMENT, doc);
       });
     });
   }

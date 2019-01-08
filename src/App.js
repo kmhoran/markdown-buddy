@@ -15,7 +15,7 @@ import {
   MAIN_OPEN_NEW_DOCUMENT,
   INTERNAL_ERROR
 } from "./constants/actionTypes";
-import { APP_RETURN_FOCUSED_DOCUMENT } from "./constants/electronEventTypes";
+import { APP_RENDER_RETURN_FOCUSED_DOCUMENT } from "./constants/electronEventTypes";
 import focusedDocumentActions from "./actions/focusedDocumentActions";
 import mainEventActions from "./actions/mainEventActions";
 
@@ -52,10 +52,9 @@ class App extends Component {
       this.handleAppError(err);
     };
     cbo[MAIN_OPEN_NEW_DOCUMENT] = doc => {
-      console.log("[App] got doc: ", doc);
       this.props.openNewDocument(doc);
     };
-    cbo[APP_RETURN_FOCUSED_DOCUMENT] = () =>{
+    cbo[APP_RENDER_RETURN_FOCUSED_DOCUMENT] = () => {
       return this.props.focused;
     };
     return cbo;
@@ -86,8 +85,10 @@ class App extends Component {
   }
 
   onMarkdownChange(text) {
+    if (this.props.focused.text === text) return;
     this.props.updateDocument({
       ...this.props.focused,
+      unsavedChanges: true,
       text
     });
   }
@@ -115,7 +116,9 @@ class App extends Component {
     const { text, name } = doc;
     return (
       <div className="App">
-        {/* <pre className="debug">{JSON.stringify(this.props)}</pre> */}
+        <pre className="debug">
+          {JSON.stringify(this.props.focused.unsavedChanges)}
+        </pre>
         <DocumentBar
           document={doc}
           onTitleChange={this.onDocumentTitleChange}

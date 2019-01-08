@@ -11,11 +11,11 @@ class EventTriggers {
 
   OpenNewDocument(doc) {
     console.log("[event triggers] opening doc: ", doc);
-    this.TriggerEvent(_electronEventTypes.APP_LOAD_DOC, doc);
+    this.TriggerEvent(_electronEventTypes.APP_MAIN_LOAD_DOC, doc);
   }
 
   RequestFocusedDocument() {
-    this.TriggerEvent(_electronEventTypes.APP_REQUEST_FOCUSED_DOCUMENT);
+    this.TriggerEvent(_electronEventTypes.APP_MAIN_REQUEST_FOCUSED_DOCUMENT);
   }
 
   TriggerEvent(eventType, data = null) {

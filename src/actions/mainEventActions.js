@@ -14,7 +14,6 @@ const markHandshakeComplete = () => dispatch => {
 };
 
 const openNewDocument = doc => dispatch => {
-  console.log("[mainEventActions] got doc: ", doc);
   dispatch({
     type: MAIN_OPEN_NEW_DOCUMENT,
     payload: { doc }

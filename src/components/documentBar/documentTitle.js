@@ -74,7 +74,8 @@ class DocumentTitle extends React.Component {
     this.myContextMenu.popup();
   }
 
-  renderTitle(name, classes) {
+  renderTitle(doc, classes) {
+    const {name, unsavedChanges, isDefault} = doc;
     if (this.state && this.state.editingTitle) {
       return (
         <form className={classes.container} noValidate autoComplete="off">
@@ -98,13 +99,13 @@ class DocumentTitle extends React.Component {
         onContextMenu={this.handleContextMenu}
         onClick={this.turnOnTitleEdit}
       >
-        {name}
+        {name}{!isDefault && unsavedChanges? "*" : ""}
       </div>
     );
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, document } = this.props;
 
     if (!this.props.document.uid) {
       return (
@@ -113,9 +114,8 @@ class DocumentTitle extends React.Component {
         </div>
       );
     }
-    const { name } = this.props.document;
     return (
-      <div className="document-title">{this.renderTitle(name, classes)}</div>
+      <div className="document-title">{this.renderTitle(document, classes)}</div>
     );
   }
 }
