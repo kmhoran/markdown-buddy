@@ -6,7 +6,8 @@ const {
   shell,
   ipcMain,
   Menu,
-  TouchBar
+  TouchBar,
+  globalShortcut
 } = require("electron");
 
 const {
@@ -82,6 +83,30 @@ const createWindow = () => {
   triggers = new EventTriggers(mainWindow, errorHandler);
 };
 
+const shortcuts = [{
+  label: "Open",
+  accelerator: "CmdOrCtrl+o",
+  callback: () => {
+    OpenFile((err, doc) => {
+      if (err) errorHandler(err);else triggers.OpenNewDocument(doc);
+    });
+  }
+}, {
+  label: "Save",
+  accelerator: "CmdOrCtrl+s",
+  callback: () => {
+    triggers.RequestFocusedDocument();
+  }
+}, {
+  label: "Open Start Document",
+  accelerator: "CmdOrCtrl+d",
+  callback: () => {
+    OpenDefaultDocument((err, doc) => {
+      if (err) errorHandler(err);else triggers.OpenNewDocument(doc);
+    });
+  }
+}];
+
 const generateMenu = () => {
   const template = [{
     label: "File",
@@ -94,8 +119,17 @@ const generateMenu = () => {
       type: "separator"
     }, {
       label: "Open",
+      accelerator: "CmdOrCtrl+o",
       click: () => {
         OpenFile((err, doc) => {
+          if (err) errorHandler(err);else triggers.OpenNewDocument(doc);
+        });
+      }
+    }, {
+      label: "Open Start Document",
+      accelerator: "CmdOrCtrl+d",
+      click: () => {
+        OpenDefaultDocument((err, doc) => {
           if (err) errorHandler(err);else triggers.OpenNewDocument(doc);
         });
       }
@@ -103,6 +137,7 @@ const generateMenu = () => {
       type: "separator"
     }, {
       label: "Save",
+      accelerator: "CmdOrCtrl+s",
       click: () => {
         triggers.RequestFocusedDocument();
       }
@@ -194,6 +229,9 @@ const generateMenu = () => {
 app.on("ready", () => {
   createWindow();
   generateMenu();
+  shortcuts.forEach(elem => {
+    globalShortcut.register(elem.accelerator, elem.callback);
+  });
 });
 app.on("window-all-closed", () => {
   app.quit();

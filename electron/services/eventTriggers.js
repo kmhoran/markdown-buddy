@@ -5,12 +5,10 @@ import {
 
 class EventTriggers {
     constructor(window, errorHandler) {
-    console.log("constructing event Triggers");
     this.window = window;
     this.errorHandler = errorHandler;
   }
   OpenNewDocument(doc) {
-    console.log("[event triggers] opening doc: ", doc);
     this.TriggerEvent(APP_MAIN_LOAD_DOC, doc);
   }
 
