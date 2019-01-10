@@ -4,6 +4,7 @@ import SplitPane from "react-split-pane";
 import ReactMarkdown from "react-markdown";
 import Editor from "./editor";
 import DocumentBar from "./components/documentBar";
+import DocumentDrawer from "./components/documentDrawer";
 import {
   SetElectronListeners,
   PingMainProcess,
@@ -21,6 +22,7 @@ import mainEventActions from "./actions/mainEventActions";
 
 import "./App.css";
 import { throwError } from "rxjs";
+import documentDrawer from "./components/documentDrawer";
 
 class App extends Component {
   constructor(props) {
@@ -116,13 +118,12 @@ class App extends Component {
     const { text, name } = doc;
     return (
       <div className="App">
-        <pre className="debug">
-          {JSON.stringify(this.props.focused.unsavedChanges)}
-        </pre>
+        <pre className="debug">{JSON.stringify(this.props.drawer)}</pre>
         <DocumentBar
           document={doc}
           onTitleChange={this.onDocumentTitleChange}
         />
+        <DocumentDrawer />
         <SplitPane split="vertical" defaultSize="50%">
           <div className="editor-pane">
             <Editor
