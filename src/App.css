@@ -1,3 +1,31 @@
+.App{
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  height: 100%;
+}
+.drawer-menu{
+  flex: 0 0 240px;
+  min-height: 100%;
+}
+.workspace{
+  /* display: flex;
+  flex-flow: column; */
+  height: 100%;
+  flex-grow: 1;
+}
+/* .appbar{
+  flex: 1 1 50px;
+} */
+.markdown{
+  border: 1px solid blue;
+  min-height: 100%;
+  max-width: 100%;
+  width: 100%;
+  min-width: 100%;
+  position: relative;
+  /* flex: 1 1 auto; */
+}
 .Resizer {
   background: #000;
   opacity: 0.4;
@@ -59,9 +87,9 @@
 
 .debug {
   background-color: yellow;
+  flex-grow: 1;
   color: #333;
-  height: 100%;
-  max-width: 50em;
+  height: 5em;
   overflow: auto;
   white-space: nowrap;
   

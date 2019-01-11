@@ -118,24 +118,29 @@ class App extends Component {
     const { text, name } = doc;
     return (
       <div className="App">
-        <pre className="debug">{JSON.stringify(this.props.drawer)}</pre>
-        <DocumentBar
-          document={doc}
-          onTitleChange={this.onDocumentTitleChange}
-        />
-        <DocumentDrawer />
-        <SplitPane split="vertical" defaultSize="50%">
-          <div className="editor-pane">
-            <Editor
-              className="editor"
-              value={text}
-              onChange={this.onMarkdownChange}
-            />
+        <div className="drawer-menu"><DocumentDrawer /></div>
+
+        <div className="workspace">
+          {/* <pre className="debug">{JSON.stringify(this.props.drawer)}</pre> */}
+          <DocumentBar
+            document={doc}
+            onTitleChange={this.onDocumentTitleChange}
+          />
+          <div className="markdown">
+            <SplitPane split="vertical" defaultSize="50%">
+              <div className="editor-pane">
+                <Editor
+                  className="editor"
+                  value={text}
+                  onChange={this.onMarkdownChange}
+                />
+              </div>
+              <div className="view-pane">
+                <ReactMarkdown className="view" source={text} /> 
+               </div>
+            </SplitPane>
           </div>
-          <div className="view-pane">
-            <ReactMarkdown className="view" source={text} />
-          </div>
-        </SplitPane>
+        </div>
       </div>
     );
   }
