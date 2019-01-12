@@ -89,7 +89,7 @@ class DocumentTitle extends React.Component {
             autoFocus={true}
             error={name.length < 1}
             onBlur={this.turnOffTitleEdit}
-            variant="outlined"
+            variant="filled"
           />
         </form>
       );

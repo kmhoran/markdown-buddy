@@ -118,16 +118,22 @@ class App extends Component {
     const { text, name } = doc;
     return (
       <div className="App">
-        <div className="drawer-menu"><DocumentDrawer /></div>
+        <div className="drawer-menu">
+          <DocumentDrawer />
+        </div>
 
         <div className="workspace">
           {/* <pre className="debug">{JSON.stringify(this.props.drawer)}</pre> */}
-          <DocumentBar
-            document={doc}
-            onTitleChange={this.onDocumentTitleChange}
-          />
+          <div className="app-bar">
+            <DocumentBar
+              document={doc}
+              onTitleChange={this.onDocumentTitleChange}
+            />
+          </div>
           <div className="markdown">
-            <SplitPane split="vertical" defaultSize="50%">
+            <SplitPane split="vertical" 
+                       defaultSize="50%"
+                       maxSize={-50}>
               <div className="editor-pane">
                 <Editor
                   className="editor"
@@ -136,8 +142,8 @@ class App extends Component {
                 />
               </div>
               <div className="view-pane">
-                <ReactMarkdown className="view" source={text} /> 
-               </div>
+                <ReactMarkdown className="view" source={text} />
+              </div>
             </SplitPane>
           </div>
         </div>

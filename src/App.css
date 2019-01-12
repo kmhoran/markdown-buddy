@@ -5,26 +5,32 @@
   height: 100%;
 }
 .drawer-menu{
-  flex: 0 0 240px;
+  flex: 0 0 200px;
   min-height: 100%;
 }
 .workspace{
-  /* display: flex;
-  flex-flow: column; */
+  display: flex;
+  flex-flow: column;
+  align-items: stretch;
   height: 100%;
   flex-grow: 1;
 }
-/* .appbar{
-  flex: 1 1 50px;
-} */
+.appbar{
+  flex: 0 0 64px;
+}
+.markdown-frame{
+  border: 1px solid red;
+  display: flex;
+  flex-flow: column;
+  align-items: stretch;
+}
 .markdown{
-  border: 1px solid blue;
-  min-height: 100%;
-  max-width: 100%;
+  /* min-height: 100%; */
+  /* max-width: 100%;
   width: 100%;
-  min-width: 100%;
+  min-width: 100%; */
   position: relative;
-  /* flex: 1 1 auto; */
+  flex: 1 1 auto;
 }
 .Resizer {
   background: #000;
@@ -47,7 +53,7 @@
   border-top: 5px solid rgba(255, 255, 255, 0);
   border-bottom: 5px solid rgba(255, 255, 255, 0);
   cursor: row-resize;
-  width: 100%;
+  width: 50%;
 }
 
 .Resizer.horizontal:hover {
@@ -70,6 +76,11 @@
 }
 .Resizer.disabled:hover {
   border-color: transparent;
+}
+.Pane2{
+  /* max-height: 100%; */
+  overflow-y: scroll;
+  min-width: 10px;
 }
 
 .editor-pane {

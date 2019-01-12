@@ -12,7 +12,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 const styles = theme => ({
   root: {
@@ -32,7 +32,10 @@ const styles = theme => ({
     flexGrow: 1,
     padding: theme.spacing.unit * 3
   },
-  toolbar: theme.mixins.toolbar
+  toolbar: theme.mixins.toolbar,
+  drawerCard: {
+    color:"secondary"
+  }
 });
 
 class DocumentDrawer extends React.Component {
@@ -51,10 +54,11 @@ class DocumentDrawer extends React.Component {
           <div className={classes.toolbar} />
           <List>
             {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>
+              <ListItem button key={text}
+                        className={classes.drawerCard}>
+                {/* <ListItemIcon>
                   {index % 2 === 0 ? <h5>XXX</h5> : <h5>YYY</h5>}
-                </ListItemIcon>
+                </ListItemIcon> */}
                 <ListItemText primary={text} />
               </ListItem>
             ))}
@@ -62,10 +66,11 @@ class DocumentDrawer extends React.Component {
           <Divider />
           <List>
             {["All mail", "Trash", "Spam"].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>
+              <ListItem button key={text} 
+                        className={classes.drawerCard}>
+                {/* <ListItemIcon>
                   {index % 2 === 0 ? <h5>XXX</h5> : <h5>YYY</h5>}
-                </ListItemIcon>
+                </ListItemIcon> */}
                 <ListItemText primary={text} />
               </ListItem>
             ))}
