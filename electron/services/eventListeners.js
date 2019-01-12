@@ -13,7 +13,6 @@ import {
 
 export default {
   set: () => {
-    console.log("setting event listeners.");
     // render-to-main handshake
     ipcMain.on(PING, (event, arg) => {
       const message = { success: true };

@@ -13,8 +13,7 @@ var _electronEventTypes = require("../constants/electronEventTypes");
 
 var _default = {
   set: () => {
-    console.log("setting event listeners."); // render-to-main handshake
-
+    // render-to-main handshake
     _electron.ipcMain.on(_electronEventTypes.PING, (event, arg) => {
       const message = {
         success: true

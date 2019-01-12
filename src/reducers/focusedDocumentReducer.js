@@ -11,7 +11,6 @@ export default (state = {}, action) => {
         ...action.doc
       };
     case MAIN_OPEN_NEW_DOCUMENT:
-    console.log('[doc reducer] doc', action.payload.doc)
       return {
         ...action.payload.doc
       };

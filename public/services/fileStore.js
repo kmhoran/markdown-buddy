@@ -33,7 +33,6 @@ function OpenFile(callback) {
     }, async files => {
       if (!files) return;
       const doc = await renderExistingDocument(files[0]);
-      console.log("[main_filestore] opened doc: ", doc);
       callback(null, doc);
     });
   } catch (err) {
@@ -43,16 +42,12 @@ function OpenFile(callback) {
 
 function OpenDefaultDocument(callback) {
   try {
-    console.log("[main_filestore] opening default");
     renderExistingDocument(_config.default.defaultDocument).then(doc => {
-      console.log("[main_filestore] got default doc: ", doc);
       callback(null, doc);
     }).catch(err => {
-      console.log("[main_filestore] gs errror: ", err);
       callback(err);
     });
   } catch (error) {
-    console.log("[main_filestore] h5ws errror: ", error);
     callback(error);
   }
 }
@@ -94,10 +89,8 @@ function renderUid(flag = null) {
 function SaveDocument(doc, callback) {
   if (!doc) return;else if (doc.isDefault) callback(null, doc);else {
     const docPath = `${doc.parentDirectoryPath}/${doc.name}.${doc.ext}`;
-    console.log("[main_filestore] saving file ", _path.default);
     writeFileAsync(docPath, doc).then(() => {
       renderExistingDocument(docPath, doc.uid).then(newDoc => {
-        console.log("[main_filestore] returning saved file");
         callback(null, newDoc);
       });
     }).catch(err => {
@@ -108,10 +101,8 @@ function SaveDocument(doc, callback) {
 
 
 async function readFileAsync(docPath) {
-  console.log("[main_filestore] creating read promise");
   return new Promise((resolve, reject) => {
     _fs.default.readFile(docPath, encoding, (err, contents) => {
-      console.log("[main_filestore] file read! has err: ", err != null);
       if (err) reject(err);
       resolve(contents);
     });
@@ -119,7 +110,6 @@ async function readFileAsync(docPath) {
 }
 
 async function writeFileAsync(docPath, doc) {
-  console.log("[main_filestore] creating write promise");
   return new Promise((resolve, reject) => {
     _fs.default.writeFile(docPath, doc.text, err => {
       if (err) reject(err);

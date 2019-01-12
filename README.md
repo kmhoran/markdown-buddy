@@ -1,19 +1,24 @@
 # Markdown Documentation App
 
+Desktop editor and preview tool for Markdown powered by Electron.js.
+
 ## Requirements
-- Node.js
+---
+- Node.js ( 8.12.0+ )
 - Yarn
 
-## Clone from Github ()
+## Contribute
+---
+#### Clone from Github
 
-> git clone https://github.com/kmhoran/markdown-buddy.git markdown-buddy
+    git clone https://github.com/kmhoran/markdown-buddy.git markdown-buddy
 
-> cd markdown-buddy
+    cd markdown-buddy
 
-> yarn install
+    yarn install
 
-## Usage
+#### Development
 
-For local development
+To run locally:
 
-> yarn start
+    yarn start

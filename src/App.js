@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import SplitPane from "react-split-pane";
-import ReactMarkdown from "react-markdown";
 import Editor from "./editor";
 import DocumentBar from "./components/documentBar";
 import DocumentDrawer from "./components/documentDrawer";
@@ -19,10 +18,11 @@ import {
 import { APP_RENDER_RETURN_FOCUSED_DOCUMENT } from "./constants/electronEventTypes";
 import focusedDocumentActions from "./actions/focusedDocumentActions";
 import mainEventActions from "./actions/mainEventActions";
+import MarkdownRender from "./components/markdownRender";
 
 import "./App.css";
-import { throwError } from "rxjs";
-import documentDrawer from "./components/documentDrawer";
+// import { throwError } from "rxjs";
+// import documentDrawer from "./components/documentDrawer";
 
 class App extends Component {
   constructor(props) {
@@ -33,7 +33,6 @@ class App extends Component {
   }
 
   componentDidMount() {
-    console.log("app mounted");
     const eventCallbacks = this.buildCallbackObject();
     SetElectronListeners(eventCallbacks);
     this.connectToMain();
@@ -63,9 +62,7 @@ class App extends Component {
   }
 
   loadStartupDocument() {
-    console.log("checking for startup document");
     if (!this.props.focused.text) {
-      console.log("no focused document found");
       LoadDefaultDocument();
     }
   }
@@ -74,16 +71,6 @@ class App extends Component {
     setTimeout(() => {
       PingMainProcess(err => {});
     }, 1000);
-    // console.log("connect");
-    // while (!this.props.main || !this.props.main.connected) {
-    //   console.log("in while loop");
-    //   (() => {
-    //     console.log("trying to contact main...");
-    //     setTimeout(() => {
-    //       PingMainProcess();
-    //     }, 1000);
-    //   })();
-    // }
   }
 
   onMarkdownChange(text) {
@@ -142,7 +129,7 @@ class App extends Component {
                 />
               </div>
               <div className="view-pane">
-                <ReactMarkdown className="view" source={text} />
+                <MarkdownRender className="view" source={text} />
               </div>
             </SplitPane>
           </div>
