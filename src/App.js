@@ -30,6 +30,7 @@ class App extends Component {
 
     this.onMarkdownChange = this.onMarkdownChange.bind(this);
     this.onDocumentTitleChange = this.onDocumentTitleChange.bind(this);
+    this.onSelectDrawerDocument = this.onSelectDrawerDocument.bind(this);
   }
 
   componentDidMount() {
@@ -42,23 +43,24 @@ class App extends Component {
     console.log("App error!! ", err);
   }
 
+  // event callbacks
   buildCallbackObject() {
     if (!this.props) throw "no props to callback";
-    const cbo = {};
-    cbo[MAIN_HANDSHAKE_ACK] = () => {
+    const callbacks = {};
+    callbacks[MAIN_HANDSHAKE_ACK] = () => {
       this.props.completeHandshake();
       this.loadStartupDocument();
     };
-    cbo[INTERNAL_ERROR] = err => {
+    callbacks[INTERNAL_ERROR] = err => {
       this.handleAppError(err);
     };
-    cbo[MAIN_OPEN_NEW_DOCUMENT] = doc => {
+    callbacks[MAIN_OPEN_NEW_DOCUMENT] = doc => {
       this.props.openNewDocument(doc);
     };
-    cbo[APP_RENDER_RETURN_FOCUSED_DOCUMENT] = () => {
+    callbacks[APP_RENDER_RETURN_FOCUSED_DOCUMENT] = () => {
       return this.props.focused;
     };
-    return cbo;
+    return callbacks;
   }
 
   loadStartupDocument() {
@@ -89,16 +91,20 @@ class App extends Component {
     });
   }
 
-  simpleAction = e => {
-    this.props.simpleAction();
-  };
-
-  getFocusedText() {
-    if (this.props && this.props.focused) {
-      return this.props.focused.text;
+  onSelectDrawerDocument(docId) {
+    if(this.props.drawer[docId]){
+      this.props.openNewDocument(this.props.drawer[docId]);
     }
-    return "loading...";
   }
+
+  // getFocusedText() {
+  //   if (this.props && this.props.focused) {
+  //     return this.props.focused.text;
+  //   }
+  //   return "loading...";
+  // }
+
+  // loadDocument
 
   render() {
     const doc = this.props.focused;
@@ -106,7 +112,11 @@ class App extends Component {
     return (
       <div className="App">
         <div className="drawer-menu">
-          <DocumentDrawer />
+          <DocumentDrawer
+            drawerDocs={this.props.drawer}
+            onSelectDrawerDocument={this.onSelectDrawerDocument}
+            focudesDoc={this.props.focused}
+          />
         </div>
 
         <div className="workspace">
@@ -118,9 +128,7 @@ class App extends Component {
             />
           </div>
           <div className="markdown">
-            <SplitPane split="vertical" 
-                       defaultSize="50%"
-                       maxSize={-50}>
+            <SplitPane split="vertical" defaultSize="50%" maxSize={-50}>
               <div className="editor-pane">
                 <Editor
                   className="editor"

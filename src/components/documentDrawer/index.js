@@ -1,10 +1,6 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
-import AppBar from "@material-ui/core/AppBar";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Toolbar from "@material-ui/core/Toolbar";
 import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
@@ -13,6 +9,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 
 const drawerWidth = 200;
+const maxPathLength = 20;
 
 const styles = theme => ({
   root: {
@@ -31,58 +28,91 @@ const styles = theme => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing.unit * 3
-  },
-  toolbar: theme.mixins.toolbar,
-  drawerCard: {
-    color:"secondary"
   }
 });
 
-class DocumentDrawer extends React.Component {
-  render() {
-    const { classes } = this.props;
+const drawerCardPrimary = {
+  variant: "subtitle2"
+};
 
-    return (
-      <div className={classes.root}>
-        <Drawer
-          className={classes.drawer}
-          variant="permanent"
-          classes={{
-            paper: classes.drawerPaper
-          }}
-        >
-          <div className={classes.toolbar} />
-          <List>
-            {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-              <ListItem button key={text}
-                        className={classes.drawerCard}>
-                {/* <ListItemIcon>
-                  {index % 2 === 0 ? <h5>XXX</h5> : <h5>YYY</h5>}
-                </ListItemIcon> */}
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
-          </List>
-          <Divider />
-          <List>
-            {["All mail", "Trash", "Spam"].map((text, index) => (
-              <ListItem button key={text} 
-                        className={classes.drawerCard}>
-                {/* <ListItemIcon>
-                  {index % 2 === 0 ? <h5>XXX</h5> : <h5>YYY</h5>}
-                </ListItemIcon> */}
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
-          </List>
-        </Drawer>
-      </div>
-    );
-  }
+function getAbbreviatedPath(absPath) {
+  const directorySplit = absPath
+    .substring(absPath.length - maxPathLength)
+    .split("/");
+  directorySplit.shift();
+  return `.../${directorySplit.join("/")}/`;
 }
 
-DocumentDrawer.propTypes = {
-  classes: PropTypes.object.isRequired
-};
+function renderDrawerCards(
+  drawerDocs,
+  focudesDoc,
+  onSelectDrawerDocument,
+  returnDefaultDocs = false
+) {
+  const cards = [];
+  for (let id in drawerDocs) {
+    const doc = drawerDocs[id];
+    const name =
+      !doc.isDefault && doc.unsavedChanges ? `${doc.name}*` : doc.name;
+    const secondaryText = !doc.isDefault
+      ? getAbbreviatedPath(doc.parentDirectoryPath)
+      : null;
+    if (doc.isDefault === returnDefaultDocs) {
+      cards.push(
+        <ListItem
+          button
+          key={doc.docId}
+          dense={true}
+          onClick={() => {
+            onSelectDrawerDocument(doc.docId);
+          }}
+          selected={doc.docId === focudesDoc.docId}
+        >
+          {/* <ListItemIcon>
+            {index % 2 === 0 ? <h5>XXX</h5> : <h5>YYY</h5>}
+          </ListItemIcon> */}
+          <ListItemText
+            primary={name}
+            primaryTypographyProps={drawerCardPrimary}
+            secondary={secondaryText}
+          />
+        </ListItem>
+      );
+    }
+  }
+  return cards;
+}
+
+function DocumentDrawer(props) {
+  const { classes, drawerDocs, focudesDoc } = props;
+  const { onSelectDrawerDocument } = props;
+
+  console.log(drawerDocs);
+
+  return (
+    <div className={classes.root}>
+      <Drawer
+        className={classes.drawer}
+        variant="permanent"
+        classes={{
+          paper: classes.drawerPaper
+        }}
+      >
+        <List>
+          {renderDrawerCards(
+            drawerDocs,
+            focudesDoc,
+            onSelectDrawerDocument,
+            true
+          )}
+        </List>
+        <Divider />
+        <List>
+          {renderDrawerCards(drawerDocs, focudesDoc, onSelectDrawerDocument)}
+        </List>
+      </Drawer>
+    </div>
+  );
+}
 
 export default withStyles(styles)(DocumentDrawer);

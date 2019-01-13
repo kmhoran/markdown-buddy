@@ -25,14 +25,6 @@ const styles = {
   }
 };
 
-function getAbbreviatedPath(absPath) {
-  const directorySplit = absPath
-    .substring(absPath.length - maxPathLength)
-    .split("/");
-  directorySplit.shift();
-  return `.../${directorySplit.join("/")}`;
-}
-
 // class DocumentBar extends React.Component {
 //   renderAbsPath() {
 //     const { document } = this.props;

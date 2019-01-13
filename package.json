@@ -16,7 +16,7 @@
 	"scripts": {
 		"dev": "yarn react-scripts start",
 		"build": "react-scripts build",
-		"electron-build": "babel ./electron -d ./public && cp -rT ./assets/ ./public/assets/",
+		"electron-build": "cp -rT ./static/ ./public/ && babel ./electron -d ./public &&  cp -rT ./assets/ ./public/assets/",
 		"start": "yarn electron-build && concurrently \"cross-env BROWSER=none yarn react-scripts start\" \"wait-on http://localhost:3000 && electron .\"",
 		"pack": "electron-builder --dir",
 		"dist": "npx build --x64 --macos --win --linux --c.extraMetadata.main=build/main.js -p always"

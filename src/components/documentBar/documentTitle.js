@@ -107,7 +107,7 @@ class DocumentTitle extends React.Component {
   render() {
     const { classes, document } = this.props;
 
-    if (!this.props.document.uid) {
+    if (!this.props.document.docId) {
       return (
         <div>
           <h3>loading ...</h3>

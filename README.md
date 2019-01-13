@@ -7,7 +7,7 @@ Desktop editor and preview tool for Markdown powered by Electron.js.
 - Node.js ( 8.12.0+ )
 - Yarn
 
-## Contribute
+## Develop
 ---
 #### Clone from Github
 
@@ -17,8 +17,12 @@ Desktop editor and preview tool for Markdown powered by Electron.js.
 
     yarn install
 
-#### Development
+#### Run
 
 To run locally:
 
     yarn start
+    
+#### Build
+
+Follow Electon's [build guide](https://electronjs.org/docs/development/build-instructions-gn).

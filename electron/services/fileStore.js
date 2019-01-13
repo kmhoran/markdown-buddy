@@ -40,18 +40,18 @@ export function OpenDefaultDocument(callback) {
   }
 }
 
-async function renderExistingDocument(docPath, uid = null) {
+async function renderExistingDocument(docPath, docId = null) {
   const contents = await readFileAsync(docPath);
   const ext = path.extname(docPath);
   const parentDirectoryPath = path.dirname(docPath);
   const splitPath = parentDirectoryPath.split("/");
   const parentDirectory = splitPath[splitPath.length - 1];
   const isDefault = docPath === config.defaultDocument;
-  const uidFlag = isDefault ? "DEFAULT" : null;
+  const docIdFlag = isDefault ? "DEFAULT" : null;
   return {
     text: contents,
     isDefault,
-    uid: uid || renderUid(uidFlag),
+    docId: docId || renderDocId(docIdFlag),
     parentDirectoryPath,
     parentDirectory,
     name: path.basename(docPath, ext), // return file name w/o ext
@@ -60,7 +60,7 @@ async function renderExistingDocument(docPath, uid = null) {
   };
 }
 
-function renderUid(flag=null) {
+function renderDocId(flag=null) {
   if(flag) return flag;
   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
     var r = (Math.random() * 16) | 0,
@@ -76,7 +76,7 @@ export function SaveDocument(doc, callback) {
     const docPath = `${doc.parentDirectoryPath}/${doc.name}.${doc.ext}`;
     writeFileAsync(docPath, doc)
       .then(() => {
-        renderExistingDocument(docPath, doc.uid).then(newDoc => {
+        renderExistingDocument(docPath, doc.docId).then(newDoc => {
           callback(null, newDoc);
         });
       })

@@ -34,7 +34,8 @@ const createWindow = () => {
       preload: __dirname + "/preload.js"
     },
     height: 860,
-    width: 1280
+    width: 1280,
+    icon: path.join(__dirname, "assets/icons/png/64x64.png")
   });
 
   mainWindow.loadURL(
@@ -109,7 +110,7 @@ const shortcuts = [
         else triggers.OpenNewDocument(doc);
       });
     }
-  },
+  }
 ];
 
 const generateMenu = () => {
