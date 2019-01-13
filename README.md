@@ -25,4 +25,6 @@ To run locally:
     
 #### Build
 
-Follow Electon's [build guide](https://electronjs.org/docs/development/build-instructions-gn).
+Create a GitHub personal and set it as environment variable `GH_TOKEN`.
+
+    npx electron-builder -p onTagOrDraft
