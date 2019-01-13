@@ -1,107 +1,96 @@
 {
-	"name": "markdown-buddy",
-	"version": "1.0.1",
-	"description": "",
-	"private": false,
-	"author": "Kevin Horan <kevin.michael.horan@gmail.com>",
-	"license": "MIT",
-	"homepage": "./",
-	"main": "public/main.js",
-	"keywords": [
-		"Markdown",
-		"Documentation",
-		"React",
-		"Electron"
-	],
-	"scripts": {
-		"dev": "yarn react-scripts start",
-		"build": "react-scripts build",
-		"electron-build": "cp -rT ./static/ ./public/ && babel ./electron -d ./public &&  cp -rT ./assets/ ./public/assets/",
-		"start": "yarn electron-build && concurrently \"cross-env BROWSER=none yarn react-scripts start\" \"wait-on http://localhost:3000 && electron .\"",
-		"pack": "electron-builder --dir",
-		"dist": "npx build --x64 --macos --win --linux --c.extraMetadata.main=build/main.js -p always"
-	},
-	"dependencies": {
-		"@material-ui/core": "^3.8.1",
-		"codemirror": "^5.42.2",
-		"electron-is-dev": "^0.3.0",
-		"electron-publisher-s3": "^20.17.2",
-		"markdown-it": "^8.4.2",
-		"markdown-it-emoji": "^1.4.0",
-		"markdown-it-highlightjs": "^3.0.0",
-		"node-sass": "^4.11.0",
-		"react": "^16.4.1",
-		"react-codemirror2": "^5.1.0",
-		"react-dev-utils": "^5.0.1",
-		"react-dom": "^16.7.0",
-		"react-redux": "^6.0.0",
-		"react-split-pane": "^0.1.85",
-		"redux": "^4.0.1",
-		"redux-thunk": "^2.3.0",
-		"wait-on": "^3.2.0"
-	},
-	"devDependencies": {
-		"@babel/cli": "^7.2.3",
-		"@babel/core": "^7.2.2",
-		"@babel/preset-env": "^7.2.3",
-		"concurrently": "^3.6.0",
-		"cross-env": "^5.2.0",
-		"electron": "^4.0.0",
-		"electron-builder": "^20.18.0",
-		"electron-devtools-installer": "^2.2.4",
-		"react-scripts": "1.1.4",
-		"version-bump-prompt": "^4.1.0"
-	},
-	"build": {
-		"appId": "com.some-domain",
-		"compression": "normal",
-		"productName": "Example",
-		"directories": {
-			"buildResources": "build",
-			"output": "dist"
-		},
-		"mac": {
-			"icon": "assets/icon.icns",
-			"type": "distribution",
-			"target": [
-				"pkg",
-				"dmg",
-				"mas"
-			],
-			"publish": {
-				"provider": "s3",
-				"bucket": "example-releases",
-				"path": "releases"
-			},
-			"category": "public.app-category.news"
-		},
-		"mas": {
-			"entitlements": "assets/entitlements.mas.plist",
-			"entitlementsInherit": "assets/entitlements.mas.inherit.plist",
-			"provisioningProfile": "assets/embedded.provisionprofile"
-		},
-		"win": {
-			"target": "nsis",
-			"icon": "assets/icon.ico",
-			"publish": {
-				"provider": "s3",
-				"bucket": "example-releases",
-				"path": "releases"
-			}
-		},
-		"linux": {
-			"icon": "assets/icon.png",
-			"target": [
-				"snap",
-				"AppImage"
-			],
-			"description": "Example",
-			"category": "Network;Feed",
-			"publish": {
-				"provider": "s3",
-				"bucket": "example-releases",
-				"path": "releases"
-			}
-		}
-	}
+  "name": "markdown-buddy",
+  "version": "1.1.0",
+  "description": "A markdown documentation tool",
+  "private": false,
+  "author": "Kevin Horan <kevin.michael.horan@gmail.com>",
+  "license": "MIT",
+  "homepage": "./",
+  "main": "public/main.js",
+  "keywords": [
+    "Markdown",
+    "Documentation",
+    "React",
+    "Electron"
+  ],
+  "scripts": {
+    "dev": "yarn react-scripts start",
+    "build": "yarn electron-build && react-scripts build",
+    "electron-build": "cp -rT ./static/ ./public/ && babel ./electron -d ./public &&  cp -rT ./assets/ ./public/assets/",
+    "start": "yarn electron-build && concurrently \"cross-env BROWSER=none yarn react-scripts start\" \"wait-on http://localhost:3000 && electron .\"",
+    "pack": "electron-builder --dir",
+    "dist": "npx build --x64 --macos --win --linux --c.extraMetadata.main=build/main.js -p always"
+  },
+  "dependencies": {
+    "@material-ui/core": "^3.8.1",
+    "codemirror": "^5.42.2",
+    "electron-is-dev": "^0.3.0",
+    "electron-publisher-s3": "^20.17.2",
+    "markdown-it": "^8.4.2",
+    "markdown-it-emoji": "^1.4.0",
+    "markdown-it-highlightjs": "^3.0.0",
+    "node-sass": "^4.11.0",
+    "react": "^16.4.1",
+    "react-codemirror2": "^5.1.0",
+    "react-dev-utils": "^5.0.1",
+    "react-dom": "^16.7.0",
+    "react-redux": "^6.0.0",
+    "react-split-pane": "^0.1.85",
+    "redux": "^4.0.1",
+    "redux-thunk": "^2.3.0",
+    "wait-on": "^3.2.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.2.3",
+    "concurrently": "^3.6.0",
+    "cross-env": "^5.2.0",
+    "electron": "^4.0.0",
+    "electron-builder": "^20.38.4",
+    "electron-devtools-installer": "^2.2.4",
+    "react-scripts": "^2.1.3",
+    "version-bump-prompt": "^4.1.0"
+  },
+  "build": {
+    "appId": "com.electron.markdown-buddy.app",
+    "compression": "normal",
+    "productName": "Markdown Buddy",
+    "copyright": "MIT",
+    "directories": {
+      "buildResources": "build",
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icons/favicon.ico",
+      "publish": {
+		"provider": "github",
+		"owner":"kmhoran",
+		"private": "false",
+		"releaseType": "draft"
+      }
+    },
+    "linux": {
+      "icon": "assets/icons/png/64x64.png",
+      "target": [
+        "snap",
+        "AppImage"
+      ],
+      "description": "Example",
+      "category": "Network;Feed",
+      "publish": {
+		"provider": "github",
+		"owner":"kmhoran",
+		"private": "false",
+		"releaseType": "draft"
+      }
+    }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
