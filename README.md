@@ -1,15 +1,15 @@
 ![alt-text][logo] 
-# Markdown Documentation App
+# Markdown Buddy
 
 Desktop editor and preview tool for Markdown powered by Electron.js.
 
 ## Requirements
----
+
 - Node.js ( 8.12.0+ )
 - Yarn
 
 ## Develop
----
+
 #### Clone from Github
 
     git clone https://github.com/kmhoran/markdown-buddy.git markdown-buddy
