@@ -23,7 +23,7 @@ To run locally:
 
     yarn start
 
-### Build
+#### Build
 
 To create a production-ready build:
 
