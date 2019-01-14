@@ -1,3 +1,4 @@
+![alt-text][logo] 
 # Markdown Documentation App
 
 Desktop editor and preview tool for Markdown powered by Electron.js.
@@ -23,7 +24,7 @@ To run locally:
 
     yarn start
 
-#### Build
+### Build
 
 To create a production-ready build:
 
@@ -36,13 +37,15 @@ Before publishing you need to first [create a GitHub personal access token](http
 As described in [electron-builder's](https://www.electron.build/configuration/publish) documentation, the reccomended Github realease workflow is as follows:
 
 1. Draft a new release. Set the “Tag version” to the value of `version` in the application `package.json`, and prefix it with `v`. “Release title” can be anything you want.
-For example, if your application `package.json` version is `1.0`, your draft’s “Tag version” would be `v1.0`.
+For example, if the application `package.json` version is `1.0`, your draft’s “Tag version” would be `v1.0`.
 1. Push some commits. Every CI build will update the artifacts attached to this draft.
 
 1. Once you are done, publish the release by executing the following: (
 GitHub will tag the latest commit for you). 
 
 ```npx electron-builder -p onTagOrDraft```
+
+[logo]: https://raw.githubusercontent.com/kmhoran/markdown-buddy/master/assets/icons/png/64x64.png "Markdown Buddy logo"
 
 
     
